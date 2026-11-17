@@ -1,0 +1,94 @@
+<section class="page-section">
+	<div class="container">
+		<div class="page-header">
+			<h1 class="page-title">Buscar por Pessoa</h1>
+			<p class="page-desc">Digite pelo menos 3 letras do seu nome para listar os certificados emitidos em todos os câmpus.</p>
+		</div>
+
+		<div class="search-box-wrap" id="searchBoxWrap">
+			<div class="search-input-group">
+				<span class="search-icon" aria-hidden="true">
+					<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+				</span>
+				<input
+					type="text"
+					class="input-control"
+					id="inputSearchOwner"
+					placeholder="Ex.: Maria Eduarda Silva"
+					autocomplete="off"
+					autofocus
+				>
+				<button type="button" class="search-clear-btn d-none" id="btnClearOwnerSearch" aria-label="Limpar busca" onclick="clearOwnerSearch()">
+					<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+				</button>
+			</div>
+
+			<div id="divSearch" class="search-dropdown d-none">
+				<ul id="ulSearch"></ul>
+			</div>
+		</div>
+
+		<div id="divLoadingContent" class="card loading-state d-none">
+			<span class="spinner" aria-hidden="true"></span>
+			<span>Carregando certificados...</span>
+		</div>
+
+		<section id="divInfo" class="card d-none">
+			<div class="results-header">
+				<h2 class="results-title" id="selectedOwnerTitle">Certificados</h2>
+				<div class="badges-row">
+					<span class="badge-mono" id="badgeOwnerCount">0 itens</span>
+				</div>
+			</div>
+
+			<div class="toolbar">
+				<div class="toolbar-filters">
+					<select class="input-control input-control-plain" id="floatingSelectYear" onchange="filterEvents()" aria-label="Filtrar por ano"></select>
+					<input type="text" class="input-control input-control-plain" id="floatingInputEvent" placeholder="Filtrar por evento..." onkeyup="filterEvents()">
+					<button type="button" class="btn btn-ghost btn-sm" onclick="clearFilter()">Limpar</button>
+				</div>
+
+				<div class="toolbar-actions">
+					<button type="button" class="btn btn-secondary btn-sm" onclick="downloadFiles(true)">Baixar selecionados</button>
+					<button type="button" class="btn btn-primary btn-sm" onclick="downloadFiles(false)">Baixar todos</button>
+				</div>
+			</div>
+
+			<div class="table-wrap">
+				<table class="data-table">
+					<thead>
+						<tr>
+							<th class="col-check">
+								<input type="checkbox" class="form-check-input" id="selectAllVisible" onchange="toggleSelectAll(this.checked)" aria-label="Selecionar todos os certificados visíveis">
+							</th>
+							<th class="col-year">Ano</th>
+							<th>Evento</th>
+						</tr>
+					</thead>
+					<tbody id="tableBody">
+						{{> tableOwner 0}}
+					</tbody>
+				</table>
+			</div>
+		</section>
+	</div>
+</section>
+
+<div class="modal-backdrop d-none" id="modalDownload" role="dialog" aria-modal="true" aria-labelledby="modalDownloadTitle">
+	<div class="modal-card">
+		<div class="modal-header">
+			<h3 id="modalDownloadTitle" class="modal-title">Preparando download</h3>
+			<button type="button" class="modal-close" onclick="closeDownloadModal()" aria-label="Fechar">
+				<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+			</button>
+		</div>
+		<div id="modalDownloadBody" class="modal-body">
+			<div class="loading-state" style="padding: 12px 0;">
+				<span class="spinner" aria-hidden="true"></span>
+				<span>Compactando certificados em ZIP...</span>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script src="/js/searchOwner.js"></script>

@@ -1,0 +1,39 @@
+services:
+  mongo:
+    image: mongo:6
+    container_name: utfcerts_mongo
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+
+  backend:
+    build: ./backend/sgceScripts
+    container_name: utfcerts_backend
+    restart: unless-stopped
+    depends_on:
+      - mongo
+    environment:
+      - MONGO_URI=mongodb://mongo:27017/
+      - TZ=America/Sao_Paulo
+      - SYNC_HOUR=3
+    volumes:
+      - ./backend/sgceScripts:/app
+
+  frontend:
+    build: ./frontend/utfCerts
+    container_name: utfcerts_frontend
+    restart: unless-stopped
+    depends_on:
+      - mongo
+    ports:
+      - "8022:8022"
+    environment:
+      - NODE_ENV=production
+      - PORT=8022
+      - MONGODB_KEY=mongodb://mongo:27017/certs
+      - TZ=America/Sao_Paulo
+
+volumes:
+  mongo_data:

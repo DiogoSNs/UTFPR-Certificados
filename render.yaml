@@ -1,0 +1,24 @@
+services:
+  - type: web
+    name: utfpr-certificados
+    runtime: docker
+    plan: free
+    region: oregon
+    dockerfilePath: ./frontend/utfCerts/Dockerfile
+    dockerContext: ./frontend/utfCerts
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: TZ
+        value: America/Sao_Paulo
+      - key: MAX_BATCH_CERTS
+        value: "30"
+      - key: MAX_CONCURRENT_ZIPS
+        value: "2"
+      - key: DAILY_ZIP_LIMIT
+        value: "150"
+      - key: MONTHLY_MB_LIMIT
+        value: "45000"
+      - key: MONGODB_KEY
+        sync: false

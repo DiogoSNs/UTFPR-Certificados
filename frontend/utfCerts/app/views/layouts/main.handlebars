@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="description" content="Consulta unificada de certificados de extensão da UTFPR por nome ou evento, abrangendo todos os câmpus.">
+	<title>{{#if title}}{{title}} · {{/if}}UTF Certificados</title>
+	<link rel="icon" type="image/png" href="/assets/images/logo/logo.png">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+	<link href="/css/app.css" rel="stylesheet">
+</head>
+<body>
+	<div class="app-shell">
+		<header class="topbar">
+			<div class="container topbar-inner">
+				<a href="/" class="brand">
+					<span class="brand-mark" aria-hidden="true">U</span>
+					<span class="brand-name">UTF Certificados</span>
+					<span class="brand-tag">SGCE</span>
+				</a>
+
+				<nav class="nav-links" aria-label="Navegação principal">
+					<a href="/searchOwner" class="nav-link" data-nav="/searchOwner">Por Pessoa</a>
+					<a href="/searchEvent" class="nav-link" data-nav="/searchEvent">Por Evento</a>
+					<a href="/docs" class="nav-link" data-nav="/docs">Regulamentos</a>
+					<a href="/about" class="nav-link" data-nav="/about">Sobre</a>
+				</nav>
+			</div>
+		</header>
+
+		<main class="main-content">
+			{{{body}}}
+		</main>
+
+		<footer class="site-footer">
+			<div class="container footer-inner">
+				<p class="footer-copy">
+					Baseado no TCC de
+					<a href="https://github.com/pradoplucas/utfCerts" target="_blank" rel="noopener noreferrer">Lucas do Prado Pinto</a>
+				</p>
+				<p class="footer-copy">
+					Atualizado e mantido por
+					<a href="https://github.com/DiogoSNs" target="_blank" rel="noopener noreferrer" class="footer-author">DiogoSNs</a>
+				</p>
+			</div>
+		</footer>
+	</div>
+
+	<script>
+		(function () {
+			var path = window.location.pathname;
+			document.querySelectorAll('.nav-link[data-nav]').forEach(function (el) {
+				if (path.indexOf(el.getAttribute('data-nav')) === 0) {
+					el.classList.add('is-active');
+				}
+			});
+		})();
+	</script>
+</body>
+</html>

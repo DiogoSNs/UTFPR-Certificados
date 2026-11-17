@@ -1,0 +1,19 @@
+# Environment files
+.env
+**/.env
+
+# Node / Vite
+node_modules/
+**/node_modules/
+frontend/utfCerts/client/dist/
+frontend/utfCerts/uploads/temp/
+
+# Python
+__pycache__/
+**/__pycache__/
+*.pyc
+.venv/
+
+# OS / Editor
+.DS_Store
+Thumbs.db
