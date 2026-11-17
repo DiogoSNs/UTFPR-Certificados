@@ -1,40 +1,36 @@
 export function UtfprLogo({ className = 'h-7 w-auto' }) {
 	return (
 		<svg
-			viewBox="0 0 184 44"
+			viewBox="0 0 156 44"
 			fill="none"
 			xmlns="http://www.w3.org/2000/svg"
 			className={className}
 			aria-label="UTFPR"
 		>
-			{/* U */}
+			{/* U unido ao T (haste direita do U forma o T) */}
 			<path
-				d="M4 4H12V28C12 31.3 14.4 33.5 18 33.5C21.6 33.5 24 31.3 24 28V4H32V28.2C32 36.2 26.2 40.5 18 40.5C9.8 40.5 4 36.2 4 28.2V4Z"
+				d="M4 4H12.5V26.5C12.5 30.8 15.2 33.2 19.5 33.2C23.8 33.2 26.5 30.8 26.5 26.5V4H82V11.5H35V40H26.5V35.2C24.4 38.6 21.5 40.5 18 40.5C9.5 40.5 4 35.5 4 27V4Z"
 				fill="#18181A"
 			/>
-			{/* T horizontal bar + vertical stem */}
+			{/* L amarelo do F */}
 			<path
-				d="M36 4H74V11.5H59V40H51V11.5H36V4Z"
-				fill="#18181A"
-			/>
-			{/* F iconic UTFPR yellow corner + inner black block */}
-			<path
-				d="M63 14.5H88V21.5H70.5V40H63V14.5Z"
+				d="M39 14.5H82V22H47V40H39V14.5Z"
 				fill="#F2B705"
 			/>
+			{/* L preto interno do F */}
 			<path
-				d="M73.5 24.5H88V31H80.5V40H73.5V24.5Z"
+				d="M50.5 25H82V32H58.5V40H50.5V25Z"
 				fill="#18181A"
 			/>
 			{/* PR */}
 			<text
-				x="96"
-				y="39"
+				x="88"
+				y="40"
 				fill="#18181A"
 				fontFamily="DM Sans, Arial, sans-serif"
 				fontWeight="700"
-				fontSize="36"
-				letterSpacing="-1.5"
+				fontSize="32"
+				letterSpacing="-1"
 			>
 				PR
 			</text>
