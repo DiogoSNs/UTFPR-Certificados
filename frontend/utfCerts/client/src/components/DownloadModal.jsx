@@ -145,7 +145,7 @@ export function DownloadModal({ open, items = [], emptyMessage, onClose }) {
 								>
 									{isDone ? (
 										<>
-											<FiCheck className="h-3.5 w-3.5 text-[#ca8a04]" />
+											<FiCheck className="h-3.5 w-3.5" />
 											<span>Baixado</span>
 										</>
 									) : (
