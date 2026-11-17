@@ -11,12 +11,10 @@ import {
 import {
 	fetchOwnerById,
 	normalizeText,
-	downloadCertsClientSide,
+	openSingleCertPdf,
 	searchOwnersApi,
 } from '../lib/api';
 import { DownloadModal } from '../components/DownloadModal';
-
-const MAX_BATCH_CERTS = 30;
 
 export function SearchOwnerPage() {
 	const [searchParams, setSearchParams] = useSearchParams();
@@ -38,9 +36,8 @@ export function SearchOwnerPage() {
 	const [selectedCodes, setSelectedCodes] = useState(new Set());
 	const [modal, setModal] = useState({
 		open: false,
-		loading: false,
-		title: '',
-		message: '',
+		items: [],
+		emptyMessage: '',
 	});
 
 	useEffect(() => {
@@ -142,57 +139,35 @@ export function SearchOwnerPage() {
 		});
 	}
 
-	async function handleBatchDownload(onlySelected) {
-		const codes = onlySelected
-			? visibleCodes.filter((c) => selectedCodes.has(c))
-			: visibleCodes;
+	function handleBatchDownload(onlySelected) {
+		const targetCerts = onlySelected
+			? filteredCerts.filter((c) => selectedCodes.has(c.code))
+			: filteredCerts;
 
-		if (codes.length === 0) {
+		if (targetCerts.length === 0) {
 			setModal({
 				open: true,
-				loading: false,
-				title: 'Nenhum certificado selecionado',
-				message:
+				items: [],
+				emptyMessage:
 					'Selecione pelo menos um certificado na lista ou clique em "Baixar todos".',
 			});
 			return;
 		}
 
-		if (codes.length > MAX_BATCH_CERTS) {
-			setModal({
-				open: true,
-				loading: false,
-				title: 'Limite por lote excedido',
-				message: `Para manter o serviço gratuito e rápido para todos, o download em ZIP aceita até ${MAX_BATCH_CERTS} certificados por vez. Use os filtros de ano/câmpus ou baixe individualmente pelo botão PDF.`,
-			});
+		if (targetCerts.length === 1) {
+			openSingleCertPdf(targetCerts[0].code);
 			return;
 		}
 
 		setModal({
 			open: true,
-			loading: true,
-			title: 'Iniciando downloads',
-			message: `Iniciando download de 1 de ${codes.length} certificado(s)... Se o navegador perguntar, permita múltiplos downloads.`,
+			items: targetCerts.map((c) => ({
+				code: c.code,
+				title: c.event_name,
+				subtitle: `${c.year} · ${c.campus}`,
+			})),
+			emptyMessage: '',
 		});
-
-		try {
-			await downloadCertsClientSide(codes, (current, total) => {
-				setModal({
-					open: true,
-					loading: true,
-					title: 'Iniciando downloads',
-					message: `Iniciando download de ${current} de ${total} certificado(s)... Se o navegador perguntar, permita múltiplos downloads.`,
-				});
-			});
-			setModal((m) => ({ ...m, open: false }));
-		} catch {
-			setModal({
-				open: true,
-				loading: false,
-				title: 'Erro no download',
-				message: 'Não foi possível iniciar os downloads. Tente novamente ou use o botão PDF individual.',
-			});
-		}
 	}
 
 	function clearFilters() {
@@ -556,7 +531,9 @@ export function SearchOwnerPage() {
 			)}
 
 			<DownloadModal
-				state={modal}
+				open={modal.open}
+				items={modal.items}
+				emptyMessage={modal.emptyMessage}
 				onClose={() => setModal((m) => ({ ...m, open: false }))}
 			/>
 		</div>

@@ -48,23 +48,10 @@ export async function fetchEventById(id) {
 	return res.json();
 }
 
-export async function downloadCertsClientSide(codes, onProgress) {
-	for (let i = 0; i < codes.length; i++) {
-		const code = codes[i];
-		if (onProgress) onProgress(i + 1, codes.length);
-
-		const iframe = document.createElement('iframe');
-		iframe.style.display = 'none';
-		iframe.src = `https://apl.utfpr.edu.br/extensao/emitir/${encodeURIComponent(code)}`;
-		document.body.appendChild(iframe);
-
-		// Cleanup hidden iframe after giving browser time to initiate download
-		setTimeout(() => {
-			iframe.remove();
-		}, 15_000);
-
-		if (i < codes.length - 1) {
-			await new Promise((r) => setTimeout(r, 700));
-		}
-	}
+export function openSingleCertPdf(code) {
+	window.open(
+		`https://apl.utfpr.edu.br/extensao/emitir/${encodeURIComponent(code)}`,
+		'_blank',
+		'noopener,noreferrer'
+	);
 }
