@@ -83,6 +83,11 @@ export function HomePage() {
 		(overview?.campuses || []).map((c) => [c.name, c.count])
 	);
 
+	const sortedCampuses = [...MAIN_CAMPUSES].sort((a, b) => {
+		const diff = (campusCounts.get(b) || 0) - (campusCounts.get(a) || 0);
+		return diff !== 0 ? diff : a.localeCompare(b);
+	});
+
 	return (
 		<div className="bg-architectural-grid flex-1 border-b border-[#e5e5e2]">
 			<div className="mx-auto grid w-full max-w-7xl grid-cols-1 items-start gap-10 px-4 py-10 sm:px-6 lg:grid-cols-12 lg:gap-12 lg:px-10 lg:py-14">
@@ -234,7 +239,7 @@ export function HomePage() {
 						</div>
 
 						<div className="grid grid-cols-2 gap-1.5 sm:grid-cols-3 lg:grid-cols-2">
-							{MAIN_CAMPUSES.map((campus) => {
+							{sortedCampuses.map((campus) => {
 								const count = campusCounts.get(campus);
 								return (
 									<button
