@@ -11,7 +11,7 @@ import {
 import {
 	fetchOwnerById,
 	normalizeText,
-	requestBatchDownload,
+	downloadCertsClientSide,
 	searchOwnersApi,
 } from '../lib/api';
 import { DownloadModal } from '../components/DownloadModal';
@@ -171,20 +171,26 @@ export function SearchOwnerPage() {
 		setModal({
 			open: true,
 			loading: true,
-			title: 'Preparando download',
-			message: `Baixando e compactando ${codes.length} certificado(s) em ZIP...`,
+			title: 'Iniciando downloads',
+			message: `Iniciando download de 1 de ${codes.length} certificado(s)... Se o navegador perguntar, permita múltiplos downloads.`,
 		});
 
 		try {
-			const userId = await requestBatchDownload(codes);
+			await downloadCertsClientSide(codes, (current, total) => {
+				setModal({
+					open: true,
+					loading: true,
+					title: 'Iniciando downloads',
+					message: `Iniciando download de ${current} de ${total} certificado(s)... Se o navegador perguntar, permita múltiplos downloads.`,
+				});
+			});
 			setModal((m) => ({ ...m, open: false }));
-			window.location.href = `/download/${userId}`;
-		} catch (err) {
+		} catch {
 			setModal({
 				open: true,
 				loading: false,
-				title: 'Erro ao gerar ZIP',
-				message: err.message,
+				title: 'Erro no download',
+				message: 'Não foi possível iniciar os downloads. Tente novamente ou use o botão PDF individual.',
 			});
 		}
 	}
@@ -436,13 +442,13 @@ export function SearchOwnerPage() {
 										</div>
 										<div className="grid grid-cols-2 gap-2 pl-7">
 											<a
-												href={`/api/pdf/${encodeURIComponent(cert.code)}`}
+												href={`https://apl.utfpr.edu.br/extensao/emitir/${encodeURIComponent(cert.code)}`}
 												target="_blank"
 												rel="noopener noreferrer"
 												className="inline-flex h-9 items-center justify-center gap-1.5 rounded-lg border border-[#e5e5e2] bg-[#f8f8f6] text-xs font-medium text-[#18181a]"
 											>
 												<FiFileText className="h-3.5 w-3.5" />
-												<span>Visualizar PDF</span>
+												<span>Baixar PDF</span>
 											</a>
 											<a
 												href={`https://apl.utfpr.edu.br/extensao/certificados/validar/${cert.code}`}
@@ -519,10 +525,10 @@ export function SearchOwnerPage() {
 											<td className="px-4 py-3 text-right">
 												<div className="inline-flex items-center gap-2">
 													<a
-														href={`/api/pdf/${encodeURIComponent(cert.code)}`}
+														href={`https://apl.utfpr.edu.br/extensao/emitir/${encodeURIComponent(cert.code)}`}
 														target="_blank"
 														rel="noopener noreferrer"
-														title="Abrir PDF no navegador"
+														title="Baixar PDF oficial"
 														className="inline-flex items-center gap-1 rounded-md border border-[#e5e5e2] bg-white px-2.5 py-1 text-xs font-medium text-[#18181a] hover:bg-[#f3f3f1]"
 													>
 														<FiFileText className="h-3.5 w-3.5" />
