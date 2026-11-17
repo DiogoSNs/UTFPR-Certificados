@@ -436,13 +436,13 @@ export function SearchOwnerPage() {
 										</div>
 										<div className="grid grid-cols-2 gap-2 pl-7">
 											<a
-												href={`https://apl.utfpr.edu.br/extensao/emitir/${cert.code}`}
+												href={`/api/pdf/${encodeURIComponent(cert.code)}`}
 												target="_blank"
 												rel="noopener noreferrer"
 												className="inline-flex h-9 items-center justify-center gap-1.5 rounded-lg border border-[#e5e5e2] bg-[#f8f8f6] text-xs font-medium text-[#18181a]"
 											>
 												<FiFileText className="h-3.5 w-3.5" />
-												<span>Baixar PDF</span>
+												<span>Visualizar PDF</span>
 											</a>
 											<a
 												href={`https://apl.utfpr.edu.br/extensao/certificados/validar/${cert.code}`}
@@ -519,10 +519,10 @@ export function SearchOwnerPage() {
 											<td className="px-4 py-3 text-right">
 												<div className="inline-flex items-center gap-2">
 													<a
-														href={`https://apl.utfpr.edu.br/extensao/emitir/${cert.code}`}
+														href={`/api/pdf/${encodeURIComponent(cert.code)}`}
 														target="_blank"
 														rel="noopener noreferrer"
-														title="Baixar PDF oficial"
+														title="Abrir PDF no navegador"
 														className="inline-flex items-center gap-1 rounded-md border border-[#e5e5e2] bg-white px-2.5 py-1 text-xs font-medium text-[#18181a] hover:bg-[#f3f3f1]"
 													>
 														<FiFileText className="h-3.5 w-3.5" />

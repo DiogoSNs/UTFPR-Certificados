@@ -9,5 +9,6 @@ router.get('/api/owners/:id', controller.getOwnerById);
 router.get('/api/events/search', controller.searchEvents);
 router.get('/api/events/:id', controller.getEventById);
 router.post('/api/download', controller.prepareDownload);
+router.get('/api/pdf/:code', controller.viewPdf);
 
 module.exports = router;

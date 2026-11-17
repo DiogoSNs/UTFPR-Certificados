@@ -1,5 +1,7 @@
 const fs = require('fs');
 const path = require('path');
+const http = require('http');
+const https = require('https');
 const mongoose = require('mongoose');
 const Event = require('../models/Event.model');
 const Owner = require('../models/Owner.model');
@@ -335,5 +337,55 @@ module.exports = {
 		} finally {
 			leaveZipSlot(zipSize);
 		}
+	},
+
+	viewPdf: (req, res) => {
+		const code = String(req.params.code || '');
+		if (!/^[A-Za-z0-9._-]+$/.test(code)) {
+			return res.status(400).send('Código inválido.');
+		}
+
+		const isDownload = req.query.download === '1';
+		const targetUrl = `https://apl.utfpr.edu.br/extensao/emitir/${code}`;
+
+		function pipePdf(url, redirectsLeft = 5) {
+			const client = url.startsWith('https://') ? https : http;
+			const upstreamReq = client.get(url, { timeout: 20_000 }, (upstreamRes) => {
+				if (
+					upstreamRes.statusCode >= 300 &&
+					upstreamRes.statusCode < 400 &&
+					upstreamRes.headers.location &&
+					redirectsLeft > 0
+				) {
+					upstreamRes.resume();
+					const nextUrl = new URL(upstreamRes.headers.location, url).toString();
+					return pipePdf(nextUrl, redirectsLeft - 1);
+				}
+
+				if (upstreamRes.statusCode !== 200) {
+					upstreamRes.resume();
+					return res.status(502).send('Não foi possível obter o PDF da UTFPR.');
+				}
+
+				res.setHeader('Content-Type', 'application/pdf');
+				res.setHeader(
+					'Content-Disposition',
+					`${isDownload ? 'attachment' : 'inline'}; filename="${code}.pdf"`
+				);
+				res.setHeader('Cache-Control', 'public, max-age=86400');
+				upstreamRes.pipe(res);
+			});
+
+			upstreamReq.on('timeout', () => {
+				upstreamReq.destroy();
+				if (!res.headersSent) res.status(504).send('Tempo esgotado ao buscar PDF.');
+			});
+
+			upstreamReq.on('error', () => {
+				if (!res.headersSent) res.status(502).send('Erro ao conectar com a UTFPR.');
+			});
+		}
+
+		pipePdf(targetUrl);
 	},
 };
