@@ -26,9 +26,9 @@ export function Layout({ children }) {
 			<header className="sticky top-0 z-40 border-b border-[#e5e5e2] bg-[#ffffff]/90 backdrop-blur-md">
 				<div className="mx-auto flex h-15 w-full max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-10">
 					<Link to="/" className="flex items-center gap-3">
-						<UtfprLogo className="h-6 w-auto" />
+						<UtfprLogo className="block h-5.5 w-auto -translate-y-[1.5px]" />
 						<span className="hidden h-4 w-px bg-[#d4d4cf] sm:inline-block" />
-						<span className="text-[15px] font-semibold tracking-tight text-[#18181a]">
+						<span className="text-[15px] leading-none font-semibold tracking-tight text-[#18181a]">
 							Certificados
 						</span>
 						<span className="font-mono-code hidden rounded border border-[#e5e5e2] bg-[#f3f3f1] px-1.5 py-0.5 text-[11px] font-medium text-[#52525e] sm:inline-block">
@@ -42,10 +42,9 @@ export function Layout({ children }) {
 								key={to}
 								to={to}
 								className={({ isActive }) =>
-									`inline-flex items-center gap-2 rounded-lg px-3 py-1.5 text-[14px] font-medium transition-colors ${
-										isActive
-											? 'bg-[#18181a] text-white'
-											: 'text-[#52525e] hover:bg-[#f3f3f1] hover:text-[#18181a]'
+									`inline-flex items-center gap-2 rounded-lg px-3 py-1.5 text-[14px] font-medium transition-colors ${isActive
+										? 'bg-[#18181a] text-white'
+										: 'text-[#52525e] hover:bg-[#f3f3f1] hover:text-[#18181a]'
 									}`
 								}
 							>
@@ -74,10 +73,9 @@ export function Layout({ children }) {
 									to={to}
 									onClick={() => setMobileOpen(false)}
 									className={({ isActive }) =>
-										`flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm font-medium ${
-											isActive
-												? 'bg-[#18181a] text-white'
-												: 'text-[#52525e] hover:bg-[#f3f3f1]'
+										`flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm font-medium ${isActive
+											? 'bg-[#18181a] text-white'
+											: 'text-[#52525e] hover:bg-[#f3f3f1]'
 										}`
 									}
 								>
