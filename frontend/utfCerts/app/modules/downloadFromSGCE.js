@@ -4,12 +4,22 @@ const http = require('http');
 const https = require('https');
 
 const CONCURRENCY = 3;
-const REQUEST_TIMEOUT_MS = 20_000;
+const REQUEST_TIMEOUT_MS = 45_000;
 
 function fetchToFile(url, destPath, redirectsLeft = 5) {
 	return new Promise((resolve, reject) => {
 		const client = url.startsWith('https://') ? https : http;
-		const req = client.get(url, { timeout: REQUEST_TIMEOUT_MS }, (res) => {
+		const options = {
+			timeout: REQUEST_TIMEOUT_MS,
+			family: 4,
+			headers: {
+				'User-Agent':
+					'Mozilla/5.0 (compatible; UTFPR-Certificados/2.0; +https://github.com/DiogoSNs/UTFPR-Certificados)',
+				Accept: 'application/pdf,*/*',
+			},
+		};
+
+		const req = client.get(url, options, (res) => {
 			if (
 				res.statusCode >= 300 &&
 				res.statusCode < 400 &&

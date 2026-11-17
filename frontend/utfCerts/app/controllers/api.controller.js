@@ -348,9 +348,25 @@ module.exports = {
 		const isDownload = req.query.download === '1';
 		const targetUrl = `https://apl.utfpr.edu.br/extensao/emitir/${code}`;
 
+		function fallbackDirect() {
+			if (!res.headersSent) {
+				res.redirect(302, targetUrl);
+			}
+		}
+
 		function pipePdf(url, redirectsLeft = 5) {
 			const client = url.startsWith('https://') ? https : http;
-			const upstreamReq = client.get(url, { timeout: 20_000 }, (upstreamRes) => {
+			const options = {
+				timeout: 15_000,
+				family: 4,
+				headers: {
+					'User-Agent':
+						'Mozilla/5.0 (compatible; UTFPR-Certificados/2.0; +https://github.com/DiogoSNs/UTFPR-Certificados)',
+					Accept: 'application/pdf,*/*',
+				},
+			};
+
+			const upstreamReq = client.get(url, options, (upstreamRes) => {
 				if (
 					upstreamRes.statusCode >= 300 &&
 					upstreamRes.statusCode < 400 &&
@@ -364,7 +380,7 @@ module.exports = {
 
 				if (upstreamRes.statusCode !== 200) {
 					upstreamRes.resume();
-					return res.status(502).send('Não foi possível obter o PDF da UTFPR.');
+					return fallbackDirect();
 				}
 
 				res.setHeader('Content-Type', 'application/pdf');
@@ -378,11 +394,11 @@ module.exports = {
 
 			upstreamReq.on('timeout', () => {
 				upstreamReq.destroy();
-				if (!res.headersSent) res.status(504).send('Tempo esgotado ao buscar PDF.');
+				fallbackDirect();
 			});
 
 			upstreamReq.on('error', () => {
-				if (!res.headersSent) res.status(502).send('Erro ao conectar com a UTFPR.');
+				fallbackDirect();
 			});
 		}
 
