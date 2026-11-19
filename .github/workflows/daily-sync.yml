@@ -1,9 +1,11 @@
-name: Daily SGCE Sync
+name: SGCE Sync (Manual)
+
+# Nota: o servidor da UTFPR (apl.utfpr.edu.br) bloqueia IPs de datacenters nos EUA
+# (incluindo GitHub Actions), por isso o agendamento automático diário foi desativado
+# para evitar e-mails de falha. Para atualizar o MongoDB Atlas a partir do Brasil:
+#   cd frontend/utfCerts && npm run sync
 
 on:
-  schedule:
-    # 06:00 UTC = 03:00 BRT (America/Sao_Paulo)
-    - cron: '0 6 * * *'
   workflow_dispatch:
     inputs:
       mode:
